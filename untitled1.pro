@@ -24,11 +24,22 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    room.cpp \
+    monster.cpp \
+    agent.cpp \
+    player.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    room.h \
+    monster.h \
+    agent.h \
+    player.h
 
 FORMS    += mainwindow.ui
 
-RESOURCES += \
-    resources.qrc
+RESOURCES += resources.qrc
+
+CONFIG += console
+CONFIG += c++11
+*gcc*:QMAKE_CXXFLAGS += -std=c++11

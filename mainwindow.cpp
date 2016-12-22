@@ -4,6 +4,13 @@
 #include <QTimer>
 #include <QLabel>
 #include <QPixmap>
+#include <vector>
+#include <string>
+#include <iostream>
+#include <fstream>
+#include <QFile>
+#include "room.h"
+using namespace std;
 
 // When the application loads
 MainWindow::MainWindow(QWidget *parent) :
@@ -13,16 +20,37 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     // Load image
-    QPixmap pixmap(":/new/prefix1/wall.jpg");
+    QPixmap pixmap(":/files/imgs/wall.jpg");
 
-    // Generate 10 walls
-    QLabel *wall[10];
-    for (int i = 0; i < 10; i++)
+
+    // Load map file and read it
+    QFile mapFile(":/files/txts/map.txt");
+    mapFile.open(QIODevice::ReadOnly | QIODevice::Text);
+    string temp;
+    vector<string> map;
+    while (!mapFile.atEnd())
     {
-        wall[i] = new QLabel(this);
-        wall[i]->setPixmap(pixmap.scaledToHeight(50));
-        wall[i]->setGeometry(i * 60, i * 60, 50, 50);
+        temp = mapFile.readLine();
+        temp = temp.substr(0, temp.length() - 1);
+        map.push_back(temp);
     }
+
+    Room::initializeRooms(map);
+    this->setGeometry(200, 200, Room::mapWidth * 50, Room::mapHeight * 50);
+    this->setStyleSheet("background-color: black;");
+
+    // Generate blocks
+    QLabel *block[100];
+    int currentBlock = 0;
+    for (int i = 0; i < Room::mapHeight; i++)
+        for (int j = 0; j < Room::mapWidth; j++)
+            if (Room::room[i][j].isBlock())
+            {
+                block[currentBlock] = new QLabel(this);
+                block[currentBlock]->setPixmap(pixmap.scaledToHeight(50));
+                block[currentBlock]->setGeometry(j * 50, i * 50, 50, 50);
+                currentBlock++;
+            }
 }
 
 MainWindow::~MainWindow()
@@ -39,7 +67,7 @@ void MainWindow::keyPressEvent(QKeyEvent* e)
         y = ui->label->y(),
         height = ui->label->height(),
         width = ui->label->width();
-    int step = 30;
+    int step = 50;
 
     // Change position
     if (e->text() == "d")
