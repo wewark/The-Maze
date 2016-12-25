@@ -22,7 +22,6 @@ MainWindow::MainWindow(QWidget *parent) :
     // Load image
     QPixmap pixmap(":/files/imgs/wall.jpg");
 
-
     // Load map file and read it
     QFile mapFile(":/files/txts/map.txt");
     mapFile.open(QIODevice::ReadOnly | QIODevice::Text);
