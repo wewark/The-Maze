@@ -1,56 +1,51 @@
-#pragma once
-#include <iostream>
-#include <string>
-#include <vector>
-#include "Agent.h"
-using namespace std;
-
-class Room;
+#include<string>
+#include<vector>
+#ifndef ROOM_H
+#define ROOM_H
+//#include "objects.h"
 class Agent;
-#define MAX_SIZE 2
-#define MAP_SIZE 11
-
-class Room
+class objects;  ///#refaie
+using namespace std;
+class room
 {
-protected:
-    string name;
-    string description;
-    int roomNum;
-    Room *north;
-    Room *south;
-    Room *east;
-    Room *west;
-    string type;
-    bool block;
-    Agent* occupants[MAX_SIZE];
-    int occupantsSize = 0;
-    bool detected;
-
-public:
-    Room();
-    Room(string name, string description);
-    Room(string name, string description, string type);
-    ~Room();
-    string getName() const;
-    string getDescription() const;
-    void setNum(int n);
-    int getNum() const;
-    static void printMap(Room** room);
-    void makeBlock();
-    void unBlock();
-    bool isBlock();
-    void link(Room *r, string direction);
-    Room *getLinked(string direction);
-    void printLinked();
-    void enter(Agent *a);
-    void leave(Agent *a);
-    int getOccupantsSize();
-    void detect();
-    bool isDetected();
-    static void detectAround(Room** room, int player_i, int player_j);
-    static vector<vector<Room>> room;
-    static int mapWidth;
-    static int mapHeight;
-    static void initializeRooms(vector<string> map);
+    public:
+        room();
+        room(string nameX, string descX, int typeX);
+        ~room();
+        static int ID;
+        //FUNCTIONS
+        room* getLinked(string direction);
+        void link(room* r,string direction); //Link rooms together.
+        void unlink(string direction = "all"); //Unlink From a direction or ALL directions.
+        bool enter(Agent* x); //Adds an Agent to room.
+        bool leave(Agent* x); //Removes an Agent from room.
+        void fogClear();
+        //GETTERS
+        string getName();
+        string getDescription();
+        int getSize(){return roomSize;}
+        int getRoomID(){return roomID;}
+        bool getType(){return type;}
+        void printOccupants(); //Print Agents inside the Room.
+        void printCurrent(); //Prints Name, Desc.
+        void printLinked(); //Print all LinkedRooms.
+        void printSurroundRooms(); //Print all Surrounding rooms.
+        void printSurroundAgent(); //Print all surrounding Agents.
+        vector<room*> getSurround();//Return an array of all surrounding available rooms.
+        vector<Agent*> getSurroundAgent();//Return an array of all surrounding Agents.
+        bool fog;
+        objects *cur_obj;  ///#refaie
+        void print_cur_obj(); ///#refaie
+    private:
+        string name;
+        string desc;
+        int roomSize;
+        int roomID;
+        int type; // 1+ for type, 0 for wall.
+        room* north;
+        room* south;
+        room* west;
+        room* east;
+        vector<Agent*> occupants;
 };
-
+#endif // ROOM_H
