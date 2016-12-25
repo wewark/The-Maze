@@ -9,7 +9,7 @@ using namespace std;
 class treasure : public objects
 {
     public:
-        treasure(string x,int c);
+        treasure(string x,int c,int d);
         bool act(player *p);
 
     protected:

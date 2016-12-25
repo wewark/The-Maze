@@ -1,20 +1,18 @@
 #include "treasure.h"
 #include "objects.h"
-#include "../room.h"
-#include "../player.h"
+#include "room.h"
+#include "player.h"
 #include <iostream>
 using namespace std;
-
-treasure::treasure(string x, int c)
+treasure::treasure(string x,int c,int d):objects(x,c,0)
 {
-    condition=c;
-    name=x;
-}
 
+}
 bool treasure::act(player *p){
-
-cout<<"congrats "<<p->getName()<<" you reached the Treasure "<<endl;
-return true;
-
+    for(int i=0;i<p->weapons.size();i++){
+        if(p->weapons[i]->getName()=="Treasure-Key"){
+            return true;
+        }
+    }
+    return false;
 }
-

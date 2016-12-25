@@ -36,6 +36,7 @@ class room
         bool fog;
         objects *cur_obj;  ///#refaie
         void print_cur_obj(); ///#refaie
+        void setObj(objects* x);
     private:
         string name;
         string desc;

@@ -9,7 +9,7 @@ using namespace std;
 class fixedobj : public objects
 {
     public:
-        fixedobj(string x,int c);
+        fixedobj(string x,int c, int d);
         bool act(player *p);
 
     protected:

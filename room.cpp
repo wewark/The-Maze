@@ -214,25 +214,34 @@ void room::printSurroundAgent(){
     vector<Agent*> surr=getSurroundAgent();
     for(int i=0; i<surr.size(); i++)
     {
-        cout << surr[i]->getName() << " : Health: " << surr[i]->getHealth() << endl;
+        cout << i+1 << " -> " << surr[i]->getName() << " : Health: " << surr[i]->getHealth() << endl;
     }
 }
 
 ///#refaie
 void room::print_cur_obj(){
+    cout << "----------------------------------------" << endl;
 if(cur_obj!= NULL){
-    if(cur_obj->getcondition()==1){
-        cout<<"prob "<<cur_obj->getname()<<endl;
+        cout << "This room contains: ";
+    if(cur_obj->getType()==1){
+        if(cur_obj->getName() == "Chest-Key") cout << "Chest-Key" << endl;
+        else if(cur_obj->getName() == "Treasure-Key") cout << "Treasure-Key" << endl;
+        else cout<<"Weapon: "<<cur_obj->getName() << " , Damage: " << cur_obj->getDamage() <<endl;
     }
-    else if(cur_obj->getcondition()==2){
-        cout<<"fixed object "<<cur_obj->getname()<<endl;
+    else if(cur_obj->getType()==2){
+        cout << "Chest: "<<cur_obj->getName() << " , Heals for: +" << cur_obj->getDamage() << "HP" << endl;
     }
-    else if(cur_obj->getcondition()==3){
-        cout<<"The treasure "<<endl;
+    else if(cur_obj->getType()==3){
+        cout<<"THE TREASURE, " << cur_obj->getName() <<endl;
     }
 }
 else {
-    cout<<"there is no objects here "<<endl;
+    cout<<"there are no objects here "<<endl;
+}
+cout << "----------------------------------------" << endl;
 }
 
+void room::setObj(objects* x)
+{
+    cur_obj = x;
 }

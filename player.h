@@ -11,16 +11,18 @@ class objects;  ///#refaie
 class player : public Agent
 {
     public:
-        player(string nameX="Untitled", room* posX=NULL, int levelX=0);
+        player();
+        player(string nameX, room* posX, int levelX, objects* wep=NULL);
         virtual ~player();
         int act();
         void status();
         void attackAround();
-        vector<objects* >weapons;   ///#refaie
+        vector<objects*> weapons;   ///#refaie
         objects *cur_held;          ///#refaie
         void printheld();           ///#refaie
-        void switchweapons();       ///#refaie
+        bool switchweapons(int w);///#refaie
         void printweapons();        ///#refaie
+        void addObj(objects* x);
     protected:
 
     private:

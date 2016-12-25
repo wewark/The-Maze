@@ -3,16 +3,28 @@
 #include "player.h"
 #include <iostream>
 using namespace std;
+objects::objects(string nameX, int typeX, int damageX)
+{
+    name = nameX;
+    type = typeX;
+    damage = damageX;
+}
 
-string objects::getname() {
+string objects::getName() {
 	return name;
 }
-void objects::setname(string x) {
+void objects::setName(string x) {
 	name = x;
 }
-int objects::getcondition() {
-	return condition;
+int objects::getType() {
+	return type;
 }
-void objects::setcondition(int y) {
-	condition = y;
+void objects::setType(int y) {
+	type = y;
+}
+void objects::setDamage(int y) {
+	damage = y;
+}
+int objects::getDamage() {
+	return damage;
 }

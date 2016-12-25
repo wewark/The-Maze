@@ -10,15 +10,19 @@ class player;
 class objects
 {
     public:
-        string getname();
-        void setname(string);
-        int getcondition();
-        void setcondition(int);
+        objects(string nameX, int typeX, int damageX);
+        string getName();
+        void setName(string);
+        int getType();
+        void setType(int);
+        void setDamage(int);
+        int getDamage();
         virtual bool act(player *p)=0;
 
     protected:
-        int condition;   /// 1- prop  , 2-fixed  , 3- treasure
+        int type;   /// 1- prop  , 2-fixed  , 3- treasure
         string name;
+        int damage;
 
 };
 

@@ -9,9 +9,8 @@ using namespace std;
 class prob : public objects
 {
     public:
-        prob(string x,int c);
+        prob(string x,int c,int d);
         bool act(player *p);
-
     protected:
 
     private:
