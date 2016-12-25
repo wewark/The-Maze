@@ -2,6 +2,8 @@
 #include "Agent.h"
 using namespace std;
 
+class Room;
+
 class Monster : public Agent
 {
 private:

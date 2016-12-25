@@ -1,8 +1,8 @@
 #ifndef FIXEDOBJ_H
 #define FIXEDOBJ_H
 #include "objects.h"
-#include "../room.h"
-#include "../player.h"
+#include "room.h"
+#include "player.h"
 #include <iostream>
 using namespace std;
 

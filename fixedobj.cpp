@@ -1,7 +1,7 @@
 #include "fixedobj.h"
 #include "objects.h"
-#include "../room.h"
-#include "../player.h"
+#include "room.h"
+#include "player.h"
 #include <iostream>
 using namespace std;
 

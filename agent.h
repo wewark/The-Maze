@@ -1,8 +1,9 @@
-#include<string>
-#include"room.h"
 #ifndef AGENT_H
 #define AGENT_H
+#include<string>
+#include"room.h"
 using namespace std;
+
 class Agent
 {
     public:
@@ -23,6 +24,7 @@ class Agent
         int getHealth();
         room* getPos();
         int getIndex();
+
     protected:
         int index;//Unique Identifier
         int health;

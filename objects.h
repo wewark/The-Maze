@@ -1,7 +1,7 @@
 #ifndef OBJECTS_H
 #define OBJECTS_H
-#include "../room.h"
-#include "../player.h"
+#include "room.h"
+#include "player.h"
 #include <iostream>
 using namespace std;
 
