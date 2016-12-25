@@ -17,7 +17,7 @@ room::room(string nameX, string descX, int typeX){
     type = typeX;
     roomSize = 0;
     roomID = ID++;
-    fog = 1;
+    fog = 0;
     cur_obj= NULL;  ///#refaie
 }
 room::~room(){//UNLINKING all other rooms from the being deleted room.

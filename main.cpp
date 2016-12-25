@@ -43,7 +43,6 @@ int main() {
     cout << endl << ">> Press Enter to continue" << endl;
     cin.get();
     system("CLS");
-
     int numberOfPlayers;
     cout << "Enter the number of players." << endl;
     cin >> numberOfPlayers;
@@ -55,6 +54,7 @@ int main() {
         cin >> name;
         me[i] = player(name, &rooms[0][2], 5); //Our Players
     }
+    system("CLS");
 //////////////////////////////////////THE GAME///////////////////////////////////////////
 	int nextStep,i; //flags,PlayerTurn
     bool turn=true; //If Turn = false, Break and check flags to give the correct msg.
