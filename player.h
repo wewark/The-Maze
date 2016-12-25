@@ -1,18 +1,29 @@
-#pragma once
+#ifndef PLAYER_H
+#define PLAYER_H
+#include <vector>    ///#refaie
 #include "Agent.h"
-#include <string>
-using namespace std;
+#include "objects.h"  ///#refaie
 
-class Player : public Agent
+
+class objects;  ///#refaie
+
+
+class player : public Agent
 {
-private:
-    static bool won;
+    public:
+        player(string nameX="Untitled", room* posX=NULL, int levelX=0);
+        virtual ~player();
+        int act();
+        void status();
+        void attackAround();
+        vector<objects* >weapons;   ///#refaie
+        objects *cur_held;          ///#refaie
+        void printheld();           ///#refaie
+        void switchweapons();       ///#refaie
+        void printweapons();        ///#refaie
+    protected:
 
-public:
-    Player(string name, Room *startingRoom);
-    ~Player();
-    bool act();
-    static void playerEscaped();
-    static bool playerWon();
+    private:
 };
 
+#endif // PLAYER_H

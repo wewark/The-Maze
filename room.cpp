@@ -1,238 +1,238 @@
-#include "Room.h"
-
-vector<vector<Room>> Room::room;
-int Room::mapWidth;
-int Room::mapHeight;
-
-Room::Room()
-{
-    name = "";
-    description = "";
-    block = false;
-    detected = false;
-
-    // Linked to nothing
+#include "room.h"
+#include "string"
+#include "Agent.h"
+#include "objects.h" ///#refaie
+#include <iostream>
+#include<vector>
+using namespace std;
+int room::ID = 0;
+room::room(){}
+room::room(string nameX, string descX, int typeX){
+    name = nameX;
+    desc = descX;
     north = NULL;
     south = NULL;
     east = NULL;
     west = NULL;
+    type = typeX;
+    roomSize = 0;
+    roomID = ID++;
+    fog = 1;
+    cur_obj= NULL;  ///#refaie
+}
+room::~room(){//UNLINKING all other rooms from the being deleted room.
+
+}
+string room::getName(){
+    if(this == NULL) return "Wall";
+    else return name;
+}
+string room::getDescription(){
+    if(this == NULL) return "Imtype Object";
+    else return desc;
 }
 
-Room::Room(string name, string description) {
-
-    this->name = name;
-    this->description = description;
-    type = "room";
-    block = false;
-    detected = false;
-
-    // Linked to nothing
-    north = NULL;
-    south = NULL;
-    east = NULL;
-    west = NULL;
+void room::printCurrent(){
+    cout << "Your are now at " << name << ", " << desc << "." << endl;
 }
+void room::printLinked(){
+    cout << "Your Surroundings are: " << endl;
+    if(north!=NULL && north->getType()){
+    	if(north->fog)
+    		cout << "-North: " << north->getName() << endl;
+    	else cout <<"-North: ?" <<endl;
+    }
+    else cout << "-North: Wall" << endl;
 
-Room::Room(string name, string description, string type) {
+    if(south!=NULL && south->getType()){
+    	if(south->fog)
+    		cout << "-South: " << south->getName() << endl;
+    	else cout <<"-South: ?" <<endl;
+    }
+    else cout << "-South: Wall" << endl;
 
-    this->name = name;
-    this->description = description;
-    this->type = type;
-    block = false;
-    detected = false;
+    if(west!=NULL && west->getType()){
+    	if(west->fog)
+    		cout << "-West: " << west->getName() << endl;
+    	else cout <<"-West: ?" <<endl;
+    }
+    else cout << "-West: Wall" << endl;
 
-    // Linked to nothing
-    north = NULL;
-    south = NULL;
-    east = NULL;
-    west = NULL;
+    if(east!=NULL && east->getType()){
+    	if(east->fog)
+    		cout << "-East: " << east->getName() << endl;
+    	else cout <<"-East: ?" <<endl;
+    }
+    else cout << "-East: Wall" << endl;
 }
-
-Room::~Room()
+void room::printOccupants()
 {
-}
+    cout << "This room contains:" << endl;
+    for(int i=0; i<roomSize; i++){
+        if(occupants[i]->getType()==0) //law monster
+        cout << i+1 << ": " << occupants[i]->getName() << " :\tHealth: " << occupants[i]->getHealth() << " :\tMonster" << endl;
+        else if(occupants[i]->getType()==1)//Law Player
+        cout << i+1 << ": " << occupants[i]->getName() << " :\tHealth: " << occupants[i]->getHealth() << " :\tPlayer" << endl;
 
-string Room::getName() const {
-    return name;
-}
-
-string Room::getDescription() const {
-    return description;
-}
-
-void Room::setNum(int n)
-{
-    roomNum = n;
-}
-
-int Room::getNum() const
-{
-    return roomNum;
-}
-
-void Room::printMap(Room** room)
-{
-    // Find the player room
-    int player_i, player_j;
-    for (int i = 0; i < MAP_SIZE; i++)
-        for (int j = 0; j < MAP_SIZE; j++)
-            if (room[i][j].occupantsSize > 0 &&
-                room[i][j].occupants[0]->getName() == "Player1" ||
-                room[i][j].occupantsSize > 1 &&
-                room[i][j].occupants[1]->getName() == "Player1")
-            {
-                player_i = i, player_j = j;
-                break;
-            }
-
-    // Detect all around it
-    detectAround(room, player_i, player_j);
-
-    // Print the map
-    for (int i = 0; i < MAP_SIZE; i++)
-    {
-        for (int j = 0; j < MAP_SIZE; j++)
-            if (!room[i][j].isDetected())
-                cout << '?';
-            else if (room[i][j].isBlock())
-                cout << '#';
-            else if (room[i][j].occupantsSize == 0)
-                cout << ' ';
-            else if (room[i][j].occupants[0]->getName() == "Player1")
-                cout << 'X';
-            else
-                cout << room[i][j].occupants[0]->nextMove();
-        cout << endl;
     }
 }
-
-void Room::makeBlock()
-{
-    block = true;
+void room::link(room* r,string direction){
+    if(r == NULL) return; //ensuring correct usage.
+    else if (direction == "north") { north = r; north->south = this; } //back and forth linking
+    else if (direction == "south") { south = r; south->north = this; } ////////////////////////
+    else if (direction == "east") { east = r; east->west = this; }     ////////////////////////
+    else if (direction == "west") { west = r; west->east = this; }     ////////////////////////
+    return;
 }
 
-void Room::unBlock()
-{
-    block = false;
+void room::unlink(string direction){ //UNLINK BACK AND FORTH.
+   if (direction == "north") {north->south = NULL; north = NULL;}
+   else if (direction == "south") { south->north = NULL; south = NULL;}
+   else if (direction == "east") { east->west = NULL; east = NULL;}
+   else if (direction == "west") { west->east = NULL; west = NULL;}
+   else if (direction == "all") {
+       if( north != NULL )north->south = NULL; north = NULL;
+       if( south != NULL )south->north = NULL; south = NULL;
+       if( east != NULL )east->west = NULL; east = NULL;
+       if( west != NULL )west->east = NULL; west = NULL;
+   }
+   else return;
 }
-
-bool Room::isBlock()
-{
-    return block;
-}
-
-// Link room to another room, one way
-void Room::link(Room *r, string direction) {
-    if (direction == "north")
-        north = r;
-    else if (direction == "south")
-        south = r;
-    else if (direction == "east")
-        east = r;
-    else if (direction == "west")
-        west = r;
-}
-
-// Get room linked in a certain direction
-Room *Room::getLinked(string direction) {
-    if (direction == "north")
-        return north;
-    else if (direction == "south")
-        return south;
-    else if (direction == "east")
-        return east;
-    else if (direction == "west")
-        return west;
+room* room::getLinked(string direction){
+    if(direction == "north") return north;
+    else if (direction == "south") return south;
+    else if (direction == "east") return east;
+    else if (direction == "west") return west;
     else return NULL;
 }
 
-// Print the name of the room linked in each direction
-void Room::printLinked() {
-    cout << "You can go:" << endl;
-    if (north != NULL)
-        cout << "North (n)" << endl;
-    if (south != NULL)
-        cout << "South (s)" << endl;
-    if (east != NULL)
-        cout << "East (e)" << endl;
-    if (west != NULL)
-        cout << "West (w)" << endl;
-    cout << "Wait (wt)" << endl;
-}
-
-void Room::enter(Agent *a)
+bool room::enter(Agent* x)
 {
-    occupants[occupantsSize++] = a;
+    if(roomSize<5 && type >= 1){
+        occupants.push_back(x);
+        roomSize++;
+        return true;
+    }
+    else return false;
 }
-
-void Room::leave(Agent *a)
-{
-    for (int i = 0; i < occupantsSize; i++)
-        if (occupants[i]->getName() == a->getName())
-        {
-            for (int j = i + 1; j < occupantsSize; j++)
-                occupants[j - 1] = occupants[j];
+bool room::leave(Agent* x){
+    if(this == NULL) return false;
+    for(int i=0; i<roomSize; i++)
+    {
+        if(occupants[i]->getIndex()==x->getIndex()){
+            occupants.erase(occupants.begin()+i);
+            roomSize--;
+            return true;
             break;
         }
-    occupantsSize--;
+    }
 }
 
-int Room::getOccupantsSize()
-{
-    return occupantsSize;
+void room::fogClear(){
+    this->fog=1;
+    if(this->getLinked("north")!=NULL){
+        this->getLinked("north")->fog=1;
+        if(this->getLinked("north")->getLinked("east")!=NULL)
+            this->getLinked("north")->getLinked("east")->fog=1;
+        if(this->getLinked("north")->getLinked("west")!=NULL)
+            this->getLinked("north")->getLinked("west")->fog=1;
+    }
+    if(this->getLinked("south")!=NULL){
+        this->getLinked("south")->fog=1;
+            if(this->getLinked("south")->getLinked("east")!=NULL)
+                this->getLinked("south")->getLinked("east")->fog=1;
+            if(this->getLinked("south")->getLinked("west")!=NULL)
+                this->getLinked("south")->getLinked("west")->fog=1;
+    }
+
+    if(this->getLinked("east")!=NULL){
+        this->getLinked("east")->fog=1;
+            if(this->getLinked("east")->getLinked("north")!=NULL)
+                this->getLinked("east")->getLinked("north")->fog=1;
+            if(this->getLinked("east")->getLinked("south")!=NULL)
+                this->getLinked("east")->getLinked("south")->fog=1;
+    }
+    if(this->getLinked("west")!=NULL){
+        this->getLinked("west")->fog=1;
+            if(this->getLinked("west")->getLinked("north")!=NULL)
+                this->getLinked("west")->getLinked("north")->fog=1;
+            if(this->getLinked("west")->getLinked("south")!=NULL)
+                this->getLinked("west")->getLinked("south")->fog=1;
+    }
 }
 
-void Room::detect()
-{
-    detected = true;
+vector<room*> room::getSurround(){
+    vector<room*> surr;
+    //1:North 2:South 3:West 4:East //5:North/West 6:North/East 7:South/West 8:South/East
+    //NULL if it doesn't exist.
+        if(this->getLinked("north")!=NULL)
+            surr.push_back(this->getLinked("north"));
+        if(this->getLinked("south")!=NULL)
+            surr.push_back(getLinked("south"));
+        if(this->getLinked("west")!=NULL)
+            surr.push_back(this->getLinked("west"));
+        if(this->getLinked("east")!=NULL)
+            surr.push_back(this->getLinked("east"));
+        if(this->getLinked("north")!=NULL)
+            if(this->getLinked("north")->getLinked("west")!=NULL)
+                surr.push_back(this->getLinked("north")->getLinked("west"));
+        if(this->getLinked("north")!=NULL)
+            if(this->getLinked("north")->getLinked("east")!=NULL)
+                surr.push_back(this->getLinked("north")->getLinked("east"));
+        if(this->getLinked("south")!=NULL)
+            if(this->getLinked("south")->getLinked("west")!=NULL)
+                surr.push_back(this->getLinked("south")->getLinked("west"));
+        if(this->getLinked("south")!=NULL)
+            if(this->getLinked("south")->getLinked("east")!=NULL)
+                surr.push_back(this->getLinked("south")->getLinked("east"));
+    return surr;
 }
 
-bool Room::isDetected()
-{
-    return detected;
+void room::printSurroundRooms(){
+        cout << this->getName() << endl;
+        cout << "---" << endl;
+        vector<room*> surr = this->getSurround();
+        for(int i=0; i<surr.size(); i++)
+                cout << surr[i]->getName() << endl;
 }
 
-void Room::detectAround(Room ** room, int player_i, int player_j)
-{
-    room[player_i][player_j].detect();
-    // The 8 neighbors
-    if (player_i > 0)
-        room[player_i - 1][player_j].detect();
-    if (player_i > 0 && player_j > 0)
-        room[player_i - 1][player_j - 1].detect();
-    if (player_i > 0 && player_j < MAP_SIZE - 1)
-        room[player_i - 1][player_j + 1].detect();
-    if (player_j > 0)
-        room[player_i][player_j - 1].detect();
-    if (player_j < MAP_SIZE - 1)
-        room[player_i][player_j + 1].detect();
-    if (player_i < MAP_SIZE - 1)
-        room[player_i + 1][player_j].detect();
-    if (player_i < MAP_SIZE - 1 && player_j > 0)
-        room[player_i + 1][player_j - 1].detect();
-    if (player_i < MAP_SIZE - 1 && player_j < MAP_SIZE - 1)
-        room[player_i + 1][player_j + 1].detect();
-}
 
-void Room::initializeRooms(vector<string> map)
-{
-    mapHeight = map.size();
-    mapWidth = map[0].size();
-    room.assign(mapHeight, vector<Room>(mapWidth));
-
-    for (int i = 0; i < mapHeight; i++)
-        for (int j = 0; j < mapWidth; j++)
+vector<Agent*> room::getSurroundAgent(){
+    vector<Agent*> surr;
+    vector<room*> surrRooms = this->getSurround();
+    for(int i=0; i<surrRooms.size(); i++)
+    {
+        for(int j=0; j<surrRooms[i]->occupants.size(); j++)
         {
-            room[i][j].setNum(i * 11 + j);
-            if (map[i][j] == '#')
-                room[i][j].makeBlock();
-            if (i > 0)
-                room[i][j].link(&room[i - 1][j], "north");
-            if (i < mapHeight - 1)
-                room[i][j].link(&room[i + 1][j], "south");
-            if (j > 0)
-                room[i][j].link(&room[i][j - 1], "west");
-            if (j < mapWidth - 1)
-                room[i][j].link(&room[i][j + 1], "east");
+            surr.push_back(surrRooms[i]->occupants[j]);
         }
+    }
+    return surr;
+}
+
+void room::printSurroundAgent(){
+    vector<Agent*> surr=getSurroundAgent();
+    for(int i=0; i<surr.size(); i++)
+    {
+        cout << surr[i]->getName() << " : Health: " << surr[i]->getHealth() << endl;
+    }
+}
+
+///#refaie
+void room::print_cur_obj(){
+if(cur_obj!= NULL){
+    if(cur_obj->getcondition()==1){
+        cout<<"prob "<<cur_obj->getname()<<endl;
+    }
+    else if(cur_obj->getcondition()==2){
+        cout<<"fixed object "<<cur_obj->getname()<<endl;
+    }
+    else if(cur_obj->getcondition()==3){
+        cout<<"The treasure "<<endl;
+    }
+}
+else {
+    cout<<"there is no objects here "<<endl;
+}
+
 }

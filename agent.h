@@ -1,26 +1,34 @@
-#pragma once
-#include "Room.h"
+#include<string>
+#include"room.h"
+#ifndef AGENT_H
+#define AGENT_H
 using namespace std;
-
-class Room;
-
 class Agent
 {
-protected:
-    Room *currentRoom;
-    string name;
-public:
-    virtual bool act() = 0;
-    virtual char nextMove() { return 0; }
-    virtual void startMoving() {}
-    virtual void startChasing() {}
-    virtual void stopMoving() {}
-    virtual bool isChasing() { return 0; }
-    Agent();
-    Agent(string name, Room *startingRoom);
-    ~Agent();
-    Room *getCurrentRoom() const;
-    string getName() { return name; }
-    bool move(string direction);
+    public:
+        Agent(string nameX , room* posX, int typeX,int level); //Constructor
+        virtual ~Agent();//Destructor
+        static int TotalIndexs; //Total Number of Agents in the program.
+        //FUNCTIONS
+        virtual int act() = 0;
+        virtual void status() = 0;//Print Agent's current status and stats.
+        bool move(string direction);
+        //-Setters-//
+        void rename(string x);
+        void setHealth(int x);
+        bool assignRoom(room* x);
+        //-Getters-//
+        string getName();
+        int getType();
+        int getHealth();
+        room* getPos();
+        int getIndex();
+    protected:
+        int index;//Unique Identifier
+        int health;
+        int level;
+        int type; //1=Player, 0=Monster, 2,3,4... later.
+        string name;
+        room* cur_pos;
 };
-
+#endif // AGENT_H
