@@ -12,9 +12,9 @@ class player : public Agent
 {
     public:
         player();
-        player(string nameX, room* posX, int levelX, objects* wep=NULL);
+        player(string nameX, Room* posX, int levelX, objects* wep=NULL);
         virtual ~player();
-        int act();
+        int act(string key);
         void status();
         void attackAround();
         vector<objects*> weapons;   ///#refaie

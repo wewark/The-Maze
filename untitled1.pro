@@ -26,15 +26,27 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += main.cpp\
         mainwindow.cpp \
     room.cpp \
-    monster.cpp \
     agent.cpp \
-    player.cpp
+    player.cpp \
+    fixedobj.cpp \
+    grue.cpp \
+    helpers.cpp \
+    objects.cpp \
+    prob.cpp \
+    treasure.cpp \
+    game.cpp
 
 HEADERS  += mainwindow.h \
     room.h \
-    monster.h \
     agent.h \
-    player.h
+    player.h \
+    fixedobj.h \
+    grue.h \
+    helpers.h \
+    objects.h \
+    prob.h \
+    treasure.h \
+    game.h
 
 FORMS    += mainwindow.ui
 

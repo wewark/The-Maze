@@ -1,15 +1,15 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QMessageBox>
-#include <QTimer>
 #include <QLabel>
 #include <QPixmap>
 #include <vector>
 #include <string>
 #include <iostream>
-#include <fstream>
-#include <QFile>
 #include "room.h"
+#include "agent.h"
+#include "game.h"
+#include "helpers.h"
 using namespace std;
 
 // When the application loads
@@ -19,38 +19,31 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // Load image
-    QPixmap pixmap(":/files/imgs/wall.jpg");
+    // Load images
+    wallpix.load(":/files/imgs/wall.jpg");
+    player1pix.load(":/files/imgs/player1.png");
+    monsterpix.load(":/files/imgs/monster_1.png");
+    nothingpix.load(":/files/imgs/nothing.png");
 
-
-    // Load map file and read it
-    QFile mapFile(":/files/txts/map.txt");
-    mapFile.open(QIODevice::ReadOnly | QIODevice::Text);
-    string temp;
-    vector<string> map;
-    while (!mapFile.atEnd())
-    {
-        temp = mapFile.readLine();
-        temp = temp.substr(0, temp.length() - 1);
-        map.push_back(temp);
-    }
-
-    Room::initializeRooms(map);
-    this->setGeometry(200, 200, Room::mapWidth * 50, Room::mapHeight * 50);
+    this->setGeometry(200, 200, Game::mapWidth * tileHeight, Game::mapHeight * tileHeight);
     this->setStyleSheet("background-color: black;");
 
-    // Generate blocks
-    QLabel *block[100];
-    int currentBlock = 0;
-    for (int i = 0; i < Room::mapHeight; i++)
-        for (int j = 0; j < Room::mapWidth; j++)
-            if (Room::room[i][j].isBlock())
-            {
-                block[currentBlock] = new QLabel(this);
-                block[currentBlock]->setPixmap(pixmap.scaledToHeight(50));
-                block[currentBlock]->setGeometry(j * 50, i * 50, 50, 50);
-                currentBlock++;
-            }
+    tile.assign(Game::mapHeight, vector<QLabel*>(Game::mapWidth));
+
+    for (int i = 0; i < Game::mapHeight; i++)
+        for (int j = 0; j < Game::mapWidth; j++)
+        {
+            tile[i][j] = new QLabel(this);
+            tile[i][j]->setGeometry(j * tileHeight, i * tileHeight, tileHeight, tileHeight);
+            if (Game::rooms[i][j].isWall())
+                tile[i][j]->setPixmap(wallpix.scaledToHeight(tileHeight));
+            else if (Game::rooms[i][j].occupants.size() > 0 &&
+                     Game::rooms[i][j].occupants[0]->getType() == "player")
+                tile[i][j]->setPixmap(player1pix.scaledToHeight(tileHeight));
+            else if (Game::rooms[i][j].occupants.size() > 0 &&
+                     Game::rooms[i][j].occupants[0]->getType() == "monster")
+                tile[i][j]->setPixmap(monsterpix.scaledToHeight(tileHeight));
+        }
 }
 
 MainWindow::~MainWindow()
@@ -61,6 +54,24 @@ MainWindow::~MainWindow()
 // On pressing anykey
 void MainWindow::keyPressEvent(QKeyEvent* e)
 {
+    int nextStep;
+    nextStep = Game::me[0]->act(e->text().toLocal8Bit().constData());
+    moveMobs(Game::mobs);
+
+    // Refresh GUI
+    for (int i = 0; i < Game::mapHeight; i++)
+        for (int j = 0; j < Game::mapWidth; j++)
+            if (Game::rooms[i][j].isWall())
+                tile[i][j]->setPixmap(wallpix.scaledToHeight(tileHeight));
+            else if (Game::rooms[i][j].occupants.size() > 0 &&
+                     Game::rooms[i][j].occupants[0]->getType() == "player")
+                tile[i][j]->setPixmap(player1pix.scaledToHeight(tileHeight));
+            else if (Game::rooms[i][j].occupants.size() > 0 &&
+                     Game::rooms[i][j].occupants[0]->getType() == "monster")
+                tile[i][j]->setPixmap(monsterpix.scaledToHeight(tileHeight));
+            else
+                tile[i][j]->setPixmap(nothingpix.scaledToHeight(tileHeight));
+
     // Get original location
     int
         x = ui->label->x(),
