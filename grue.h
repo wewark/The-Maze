@@ -5,7 +5,7 @@
 class grue : public Agent
 {
     public:
-        grue(string nameX="Untitled", Room* posX=NULL, int levelX=0); //Constructor
+        grue(string nameX="Untitled", room* posX=NULL, int levelX=0); //Constructor
         virtual ~grue(); //Destructor
         void status(); //Print Name/Level and Position.
         int act(); //Move Accordingly.

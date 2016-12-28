@@ -2,11 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QKeyEvent>
-#include <vector>
-#include <QLabel>
-#include <QPixmap>
-using namespace std;
+#include<QKeyEvent>
 
 namespace Ui {
 class MainWindow;
@@ -23,12 +19,6 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    QPixmap wallpix;
-    QPixmap player1pix;
-    QPixmap monsterpix;
-    QPixmap nothingpix;
-    vector<vector<QLabel*>> tile;
-    const int tileHeight = 30;
 };
 
 /* IGNORE this

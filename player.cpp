@@ -8,40 +8,29 @@ using namespace std;
 
 
 class objects;  ///#refaie
-objects* defaultWep = new prob("Newbie-Sword", 1, 3); // DEFAULT WEAPON
+objects* defaultWep = new prob("Newbie-Sword",1,3);//DEFAULT WEAPON
 player::player():Agent("Untitled",NULL,1,0)
 {
 
 }
-player::player(string nameX, Room* posX, int levelX, objects* wep) : Agent(nameX, posX, 1, levelX)
+player::player(string nameX, room* posX, int levelX, objects* wep):Agent(nameX,posX,1,levelX)
 {
     if(wep != NULL)
-        cur_held = wep;
-    else
-        cur_held = defaultWep;
+    cur_held = wep;
+    else cur_held = defaultWep;
     if(cur_pos != NULL)
-        cur_pos->clearFog();
+        cur_pos->fogClear();
 }
-
 player::~player(){}
-
-int player::act(string key)
+int player::act()
 {
-    string command = "invalid";
-    if (key == "w") command = "north";
-    else if (key == "s") command = "south";
-    else if (key == "d") command = "east";
-    else if (key == "a") command = "west";
-    else if (key == "e") command = "attack";
-    else if (key == "q") command = "switch";
-    cout << "you did " << command << endl;
-
-        if( health <= 0 ) return 2; // law mot yb2a enta keda 5sert, return 2 (2 = death)
+    while(true){
+        if( health <= 0 ) return 2;//law mot yb2a enta keda 5sert, return 2 (2 = death)
         cout << endl;
         cout << ">> Please Type(North,South,East,West) to move." << endl;
         cout << ">> Type \"Attack\" to attack all the surrounding monsters." << endl;
         cout << ">> Type \"Pick\" to pick room's object\n>> Type \"Switch\" to switch between your weapons" << endl;
-        //string command = getDirections(); //get direction and return lower-case command and Invalid if unwanted command.
+        string command = getDirections(); //get direction and return lower-case command and Invalid if unwanted command.
         if(command == "quit"){//Quit with flag = 0
             system("CLS");
             return 0;
@@ -118,20 +107,20 @@ int player::act(string key)
             attackAround();
             cout << "----------------------------------------" << endl;
             cout << ">> You attacked all the monsters around you!" << endl;
-            //system("PAUSE");
-            //system("CLS");
+            system("PAUSE");
+            system("CLS");
             return 1;
         }
         else if(move(command))//LAW YNF3 TT7ARK FE EL ROOM DEH E3ML KAZA...
         {
             cout << "----------------------------------------" << endl;
             cout << ">> You moved " << command << "." << endl;
-            //system("PAUSE");
-            //system("CLS");
-            cur_pos->clearFog(); //Clear the fog of WAR.
+            system("PAUSE");
+            system("CLS");
+            cur_pos->fogClear(); //Clear the fog of WAR.
             return 1;
         }
-        else if(cur_pos->getLinked(command)==NULL || !cur_pos->getLinked(command)->isWall()) //LAW MA3rfsh yt7rak, check ma3rfsh leh.
+        else if(cur_pos->getLinked(command)==NULL || cur_pos->getLinked(command)->getType() == 0 ) //LAW MA3rfsh yt7rak, check ma3rfsh leh.
         {
 
             cout << "----------------------------------------" << endl;
@@ -142,8 +131,8 @@ int player::act(string key)
             cout << "----------------------------------------" << endl;
             cout <<"The room is full, you can't enter this room at the moment."<<endl;
         }
+    }
 }
-
 void player::status()
 {
     cout << "---------------YOUR STATS---------------" << endl;
@@ -165,7 +154,7 @@ void player::attackAround()
     vector<Agent*> surr = cur_pos->getSurroundAgent(); //Get all Surrounding agents and iterate through them
     for(int i=0; i<surr.size(); i++)
     {
-        if(surr[i]->getType()=="monster") //IF THE AGENT IS A MONSTER
+        if(surr[i]->getType()==0) //IF THE AGENT IS A MONSTER
             surr[i]->setHealth(surr[i]->getHealth()-(cur_held->getDamage())); //ATTACK, #TODO Damage should be according to current weapon(Implmented later)
     }
 }
