@@ -18,7 +18,6 @@ int main() {
 	srand(time(NULL));
 	int length, width; // Map size.
 	loadCords(length, width); // Load from the file.
-	//room** x = new room*[length]; //rooms 2D array.
 	vector<grue*> mobs;
     vector<objects*> objectsX; //aw7ash esm fl koon
     vector<vector<room>> rooms(length, vector<room>(width));
@@ -29,19 +28,8 @@ int main() {
     // Load Objects data into vector, and spawn them + assign names.
     spawnLoadObjects(rooms,objectsX);
 ////////////////////////////////////GREETING MESSAGE/////////////////////////////////////
-	cout << ">>>> Welcome to Westworld's Maze <<<<" << endl;
-	cout << "                          -Dr.Ford" << endl;
-	cout << ">> Press any key to continue...";
-    cin.get();
-    system("CLS");
-    cout << "Your goal is to reach the treasure first, unfortunately the treasure is locked." << endl
-    << "You have to find the treasure key, but beware of Dr.Ford's monsters!" << endl
-    << "You can attack these monsters and they can attack you too!" << endl
-    << "There are different chests which contain health potion that heals your HP" << endl
-    << "But you have to find the key for these chests too." << endl
-    << "There are different weapons on ground, pick a weapon to damage the monsters more effective" << endl;
-    cout << endl << ">> Press Enter to continue" << endl;
-    cin.get();
+
+    gameStart();
     system("CLS");
     int numberOfPlayers;
     cout << "Enter the number of players." << endl;
@@ -53,6 +41,7 @@ int main() {
         cout << "Enter the name of Player " << i+1 << endl;
         cin >> name;
         me[i] = player(name, &rooms[0][2], 5); //Our Players
+        me[i].getPos()->enter(&me[i]);//Destructor & vectors issue #Sherif
     }
     system("CLS");
 //////////////////////////////////////THE GAME///////////////////////////////////////////
@@ -76,9 +65,9 @@ int main() {
             break;
 	}
 	if (nextStep == 2) //The function act returned 2, Therefore the player WON.
-		cout << ">> You WON!, " << me[i].getName() << "!, Congratulations !" << endl;
+		cout << ">> You WON!, " << me[i].getName() << "!, You found the treasure! You're the best of all your friends!.\n All Ford's monsters has disappeared!, Congratulations guys you made it! !" << endl;
 	else if (nextStep == 3) //The function act returned 3, The Player died.
-		cout << ">> You Died :/" << endl;
+		cout << ">> " << me[i].getName() <<" Died. You lost the game so do your friends!, The maze's goal is to find the treasure... all alive!" << endl;
 	else if (nextStep == 0)
 		cout << "Game Quits." << endl; //The function act returned 0, The player typed "quit".
     return 0;

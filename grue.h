@@ -9,6 +9,7 @@ class grue : public Agent
         virtual ~grue(); //Destructor
         void status(); //Print Name/Level and Position.
         int act(); //Move Accordingly.
+        void attack();
     protected:
         int level;
         int health;

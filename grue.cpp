@@ -15,6 +15,7 @@ int grue::act()
        return 0;
     if(getHealth() <= 0)
         return 0;
+    attack();
     while(true){
         int ranDirc = rand() % 5;
         if(ranDirc == 1 && move("north")) return true;
@@ -31,4 +32,14 @@ void grue::status()
     if(cur_pos != NULL)
         cout << "at: " << cur_pos->getName() << endl;
     else cout << "Monster is not currently at any Room" << endl;
+}
+
+void grue::attack()
+{
+    vector<Agent*> x = cur_pos->getSurroundAgent();
+    for(int i=0; i<x.size(); i++)
+    {
+        if(x[i]->getType()==1)
+            x[i]->setHealth(x[i]->getHealth()-getLevel());
+    }
 }

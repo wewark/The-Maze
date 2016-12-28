@@ -32,7 +32,7 @@ inline string getDirections()
    string x;
    cin >> x;
    x=tolowerStr(x);
-   if(x=="north" || x=="south" || x=="east" || x=="west" || x=="quit" || x=="attack" || x=="switch" || x=="pick")
+   if(x=="north" || x=="south" || x=="east" || x=="west" || x=="quit" || x=="attack" || x=="switch" || x=="pick" || x=="drop")
    {
        return x;
    }
@@ -93,6 +93,7 @@ inline void linkMap(vector<vector<room>> &x)
     loadCords(length,width);
     fstream roomData;
     fstream roomName;
+    fstream roomDesc;
     /////File value holder (ba-cin fehom)/////
     string name;
     string desc="Description: later to be added";
@@ -100,12 +101,14 @@ inline void linkMap(vector<vector<room>> &x)
     /////////////////////////////////////////
     roomData.open("roomData.txt", ios::in);
     roomName.open("roomName.txt", ios::in);
+    roomDesc.open("roomDesc.txt", ios::in);
     for(int i=0; i<length; i++)
     {
       for(int j=0; j<width; j++)
         {
             roomName >> name;
             roomData >> type;
+            getline(roomDesc,desc);
             x[i][j] = room(name,desc,type);
         }
     }
@@ -136,6 +139,7 @@ inline void linkMap(vector<vector<room>> &x)
     }
     roomData.close();
     roomName.close();
+    roomDesc.close();
     return;
 }
 inline void spawnLoadMobs(vector<vector<room>> &x, vector<grue*> &mobs)
@@ -188,11 +192,28 @@ inline void spawnLoadObjects(vector<vector<room>> &x, vector<objects*> &wep)
                 objects* tmp = new treasure(name,type,damage); //Hay7sal hena memory leak ? #question
                 wep.emplace_back(tmp);
             }
-            x[ix][jx].setObj(wep[wep.size()-1]);
+            x[ix][jx].addObj(wep[wep.size()-1]);
     }
     probData.close();
     return;
 }
 
+inline gameStart()
+{
+    cout << ">>>> Welcome to Westworld's Maze <<<<" << endl;
+	cout << "                          -Dr.Ford" << endl;
+	cout << ">> Press any key to continue...";
+    cin.get();
+    system("CLS");
+    cout << "Your goal is to reach the treasure while keeping all your friends alive!, unfortunately the treasure is locked." << endl
+    << "You have to find the treasure key, but beware of Dr.Ford's monsters!" << endl
+    << "You can attack all the monsters and they can attack you too!" << endl
+    << "However you can't attack the monsters neither do they, if you're standing in the same spot" << endl
+    << "There are different chests which contain health potion that heals your HP" << endl
+    << "But you have to find the key for these chests too." << endl
+    << "There are different weapons on ground, pick a weapon to damage the monsters more effective" << endl;
 
+    cout << endl << ">> Press Enter to continue" << endl;
+    cin.get();
+}
 

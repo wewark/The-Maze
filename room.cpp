@@ -18,7 +18,6 @@ room::room(string nameX, string descX, int typeX){
     roomSize = 0;
     roomID = ID++;
     fog = 0;
-    cur_obj= NULL;  ///#refaie
 }
 room::~room(){//UNLINKING all other rooms from the being deleted room.
 
@@ -33,7 +32,7 @@ string room::getDescription(){
 }
 
 void room::printCurrent(){
-    cout << "Your are now at " << name << ", " << desc << "." << endl;
+    cout << "Your are now at " << name << ", It says \"" << desc << "\"." << endl;
 }
 void room::printLinked(){
     cout << "Your Surroundings are: " << endl;
@@ -214,34 +213,41 @@ void room::printSurroundAgent(){
     vector<Agent*> surr=getSurroundAgent();
     for(int i=0; i<surr.size(); i++)
     {
-        cout << i+1 << " -> " << surr[i]->getName() << " : Health: " << surr[i]->getHealth() << endl;
+        if(surr[i]->getHealth() > 0)
+            cout << i+1 << " -> " << surr[i]->getName() << " : Health: " << surr[i]->getHealth() << endl;
+        else
+            cout << i+1 << " -> " << surr[i]->getName() << " : Health: " << "Dead." << endl;
     }
 }
 
-///#refaie
-void room::print_cur_obj(){
-    cout << "----------------------------------------" << endl;
-if(cur_obj!= NULL){
-        cout << "This room contains: ";
-    if(cur_obj->getType()==1){
-        if(cur_obj->getName() == "Chest-Key") cout << "Chest-Key" << endl;
-        else if(cur_obj->getName() == "Treasure-Key") cout << "Treasure-Key" << endl;
-        else cout<<"Weapon: "<<cur_obj->getName() << " , Damage: " << cur_obj->getDamage() <<endl;
-    }
-    else if(cur_obj->getType()==2){
-        cout << "Chest: "<<cur_obj->getName() << " , Heals for: +" << cur_obj->getDamage() << "HP" << endl;
-    }
-    else if(cur_obj->getType()==3){
-        cout<<"THE TREASURE, " << cur_obj->getName() <<endl;
-    }
-}
-else {
-    cout<<"there are no objects here "<<endl;
-}
-cout << "----------------------------------------" << endl;
-}
 
-void room::setObj(objects* x)
+void room::addObj(objects* x)
 {
-    cur_obj = x;
+    cur_objs.push_back(x);
 }
+
+
+void room::print_cur_objs(){
+    cout << "----------------------------------------" << endl;
+    if(cur_objs.size()>0){
+        cout << "This room contains: " << endl;
+        for(int i=0; i<cur_objs.size(); i++){
+                cout << i+1 << " -> ";
+                if(cur_objs[i]->getType()==1){
+                    if(cur_objs[i]->getName() == "Chest-Key") cout << "Chest-Key" << endl;
+                    else if(cur_objs[i]->getName() == "Treasure-Key") cout << "Treasure-Key" << endl;
+                    else cout<<"Weapon: "<<cur_objs[i]->getName() << " , Damage: " << cur_objs[i]->getDamage() <<endl;
+                }
+                else if(cur_objs[i]->getType()==2){
+                    cout << "Chest: "<<cur_objs[i]->getName() << " , Heals for: +" << cur_objs[i]->getDamage() << "HP" << endl;
+                }
+                else if(cur_objs[i]->getType()==3){
+                    cout<<"THE TREASURE, " << cur_objs[i]->getName() <<endl;
+                }
+        }
+    }
+    else
+        cout << "This room doesn't contain any Objects" << endl;
+    cout << "----------------------------------------" << endl;
+}
+

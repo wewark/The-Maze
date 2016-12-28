@@ -34,9 +34,9 @@ class room
         vector<room*> getSurround();//Return an array of all surrounding available rooms.
         vector<Agent*> getSurroundAgent();//Return an array of all surrounding Agents.
         bool fog;
-        objects *cur_obj;  ///#refaie
-        void print_cur_obj(); ///#refaie
-        void setObj(objects* x);
+        vector<objects*> cur_objs;
+        void print_cur_objs();
+        void addObj(objects* x);
     private:
         string name;
         string desc;

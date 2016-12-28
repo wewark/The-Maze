@@ -12,6 +12,7 @@ class Agent
         static int TotalIndexs; //Total Number of Agents in the program.
         //FUNCTIONS
         virtual int act() = 0;
+        virtual void attack() = 0;
         virtual void status() = 0;//Print Agent's current status and stats.
         bool move(string direction);
         //-Setters-//
@@ -24,6 +25,7 @@ class Agent
         int getHealth();
         room* getPos();
         int getIndex();
+        int getLevel(){return level;}
 
     protected:
         int index;//Unique Identifier
