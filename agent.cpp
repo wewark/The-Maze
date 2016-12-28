@@ -8,13 +8,13 @@ int Agent::TotalIndexs = 0; // Initialize IDs
 Agent::Agent(string nameX = "Untitled", Room* posX = NULL, int typeX = 0, int levelX = 0)
 {
 	index = TotalIndexs++;
-    type = typeX == 1 ? "player" : "monster";
+	type = typeX == 1 ? "player" : "monster";
 	name = nameX;
 	level = levelX;
 	health = 10 * levelX;
 	cur_pos = posX;
 	if (cur_pos != NULL)
-        cur_pos->enter(this); //Add Agent to Initialized room(if exist).
+		cur_pos->enter(this); //Add Agent to Initialized room(if exist).
 }
 
 Agent::~Agent()
@@ -35,7 +35,7 @@ void Agent::rename(string x) { name = x; }
 void Agent::setHealth(int x) { health = x; }
 bool Agent::assignRoom(Room* x)
 {
-	if (x == NULL) return false;
+	if (!x) return false;
 	if (x->enter(this))
 	{
 		cur_pos->leave(this);
@@ -45,18 +45,14 @@ bool Agent::assignRoom(Room* x)
 	else return false;
 }
 
-//MOVING
 bool Agent::move(string direction)
 {
 	Room* destination = cur_pos->getLinked(direction);
-    if (destination != NULL && !destination->isWall())
-	{
-		if (destination->enter(this))
+	if (destination && !destination->isWall() && destination->enter(this))
 		{
 			cur_pos->leave(this);
 			cur_pos = destination;
 			return true;
 		}
-	}
 	return false;
 }

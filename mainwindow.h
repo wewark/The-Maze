@@ -3,9 +3,12 @@
 
 #include <QMainWindow>
 #include <QKeyEvent>
-#include <vector>
 #include <QLabel>
 #include <QPixmap>
+#include <vector>
+#include <map>
+#include <string>
+#include "room.h"
 using namespace std;
 
 namespace Ui {
@@ -23,12 +26,17 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    QPixmap wallpix;
-    QPixmap player1pix;
-    QPixmap monsterpix;
-    QPixmap nothingpix;
-    vector<vector<QLabel*>> tile;
-    const int tileHeight = 30;
+	QPixmap wallPix;
+	vector<QPixmap> playerPix;
+	vector<QPixmap> hitPix;
+	QPixmap monsterPix;
+	QPixmap nothingPix;
+	vector<vector<QLabel*>> tile;
+	vector<vector<QLabel*>> hpTile;
+	vector<vector<QLabel*>> hitTile;
+	vector<QLabel*> statusLabel;
+	static map<string, QPixmap> itemsPix;
+	const int tileHeight = 40;
 };
 
 /* IGNORE this

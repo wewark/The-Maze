@@ -18,26 +18,27 @@
 using namespace std;
 
 int main(int argc, char *argv[]) {
-    srand(time(NULL));
+	srand(time(NULL));
 
-    Room::initializeRooms();
+	Room::initializeRooms();
 
-    int numberOfPlayers = 1; // For now
-    Game::me.push_back(new player("khaled", &Game::rooms[0][2], 5));
+	int numberOfPlayers = 1; // For now
+	Game::me.push_back(new player("khaled", &Game::rooms[1][5], 5, 1));
+	Game::me.push_back(new player("hamed", &Game::rooms[6][2], 5, 2));
 
-    // Load Mobs data into vector, and spawn them + assign names.
-    spawnLoadMobs(Game::mobs);
-    // Load Objects data into vector, and spawn them + assign names.
-    spawnLoadObjects(Game::objectsX);
+	// Load Mobs data into vector, and spawn them + assign names.
+	spawnLoadMobs(Game::mobs);
+	// Load Objects data into vector, and spawn them + assign names.
+	spawnLoadObjects(Game::objectsX);
 
 
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
+	QApplication a(argc, argv);
+	MainWindow w;
+	w.show();
 
-    return a.exec();
+	return a.exec();
 
-    /*
+	/*
 	//////////////////////////////////////THE GAME///////////////////////////////////////////
 	int nextStep, i; //flags,PlayerTurn
 	bool turn = true; //If Turn = false, Break and check flags to give the correct msg.
@@ -63,7 +64,7 @@ int main(int argc, char *argv[]) {
 	else if (nextStep == 3) //The function act returned 3, The Player died.
 		cout << ">> You Died :/" << endl;
 	else if (nextStep == 0)
-        cout << "Game Quits." << endl; //The function act returned 0, The player typed "quit".
+		cout << "Game Quits." << endl; //The function act returned 0, The player typed "quit".
 	return 0;
 */
 }

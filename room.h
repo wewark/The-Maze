@@ -11,16 +11,16 @@ class Room
 {
     public:
         Room();
-        Room(string nameX, string descX, bool typeX);
+		Room(string nameX, string descX, bool typeX);
         ~Room();
         static int ID;
 
         // FUNCTIONS
         Room* getLinked(string direction);
-        void link(Room* r,string direction); // Link rooms together.
+		void link(Room* r,string direction);
         void unlink(string direction = "all"); // Unlink From a direction or ALL directions.
-        bool enter(Agent* x); // Adds an Agent to room.
-        bool leave(Agent* x); // Removes an Agent from room.
+		bool enter(Agent* x);
+		bool leave(Agent* x);
         void clearFog();
 
         // GETTERS
@@ -36,13 +36,13 @@ class Room
         void printSurroundAgent(); // Print all surrounding Agents.
         vector<Room*> getSurround();// Return an array of all surrounding available rooms.
         vector<Agent*> getSurroundAgent();// Return an array of all surrounding Agents.
-        objects *cur_obj;
-        void print_cur_obj();
-        void setObj(objects* x);
+		vector<objects*> cur_objs;
+		void print_cur_objs();
+		void addObj(objects* x);
 		bool isFogged();
         bool isWall();
         static void initializeRooms();
-        vector<Agent*> occupants;
+		vector<Agent*> occupants;
 
     private:
         string name;
@@ -55,5 +55,7 @@ class Room
         Room* east;
         bool fog;
         bool wall;
+		int pos_i;
+		int pos_j;
 };
 #endif // ROOM_H

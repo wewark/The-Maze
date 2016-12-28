@@ -6,5 +6,23 @@
         <file>imgs/player1.png</file>
         <file>imgs/monster_1.png</file>
         <file>imgs/nothing.png</file>
+        <file>imgs/player2.png</file>
+        <file>imgs/player1_avatar.png</file>
+        <file>imgs/player2_avatar.png</file>
+        <file>imgs/1.png</file>
+        <file>imgs/2.png</file>
+        <file>imgs/3.png</file>
+        <file>imgs/chest.png</file>
+        <file>imgs/chest2.png</file>
+        <file>imgs/key1.png</file>
+        <file>imgs/silverKey.png</file>
+        <file>imgs/hit_1.png</file>
+        <file>imgs/hit_2.png</file>
+        <file>imgs/hit_3.png</file>
+        <file>imgs/hit_4.png</file>
+        <file>imgs/hit_5.png</file>
+        <file>imgs/hit_6.png</file>
+        <file>imgs/hit_7.png</file>
+        <file>imgs/hit_8.png</file>
     </qresource>
 </RCC>

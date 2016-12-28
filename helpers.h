@@ -30,17 +30,16 @@ inline string getDirections()
 	cin >> x;
 	x = tolowerStr(x);
 	if (x == "north" || x == "south" || x == "east" || x == "west" ||
-		x == "quit" || x == "attack" || x == "switch" || x == "pick")
+		x == "quit" || x == "attack" || x == "switch" || x == "pick" || x == "drop")
 		return x;
 	return "invalid";
 }
 
 inline void loadCords(int &length, int &width)
 {
-	fstream cords;
-    cords.open("cords.txt", ios::in);
+	fstream cords("cords.txt", ios::in);
 	cords >> length;
-    cords >> width;
+	cords >> width;
 	cords.close();
 }
 
@@ -85,23 +84,23 @@ inline void moveMobs(vector<grue*> &mobs)
 
 inline void spawnLoadMobs(vector<grue*> &mobs)
 {
-	int n, mobLevel; //Number of mobs,level
-	int ix, jx; //Monster coordinates
+	int n, mobLevel; // Number of mobs,level
+	int ix, jx; // Monster coordinates
 	string mobName;
-	fstream mobData;
-	mobData.open("mobData.txt", ios::in);
-	mobData >> n; //ba5od el N mn el file
+
+	// Read mob data from file
+	fstream mobData("mobData.txt", ios::in);
+	mobData >> n;
 	for (int i = 0; i < n; i++)
 	{
 		mobData >> mobName;
 		mobData >> mobLevel;
 		mobData >> ix;
 		mobData >> jx;
-        grue* tmp = new grue(grue(mobName, &Game::rooms[ix][jx], mobLevel));
+		grue* tmp = new grue(grue(mobName, &Game::rooms[ix][jx], mobLevel));
 		mobs.emplace_back(tmp);
 	}
 	mobData.close();
-	return;
 }
 inline void spawnLoadObjects(vector<objects*> &wep)
 {
@@ -109,8 +108,7 @@ inline void spawnLoadObjects(vector<objects*> &wep)
 	int damage, type;
 	int ix, jx; //coordinates
 	string name;
-	fstream probData;
-	probData.open("probData.txt", ios::in);
+	fstream probData("probData.txt", ios::in);
 	probData >> n; //ba5od el N mn el file
 	for (int i = 0; i < n; i++)
 	{
@@ -119,24 +117,27 @@ inline void spawnLoadObjects(vector<objects*> &wep)
 		probData >> damage;
 		probData >> ix;
 		probData >> jx;
-		if (type == 1) {
-			objects* tmp = new prob(name, type, damage); //Hay7sal hena memory leak ? #question
+		if (type == 1)
+		{
+			//Hay7sal hena memory leak ? #question
+			objects* tmp = new prob(name, type, damage);
 			wep.emplace_back(tmp);
 		}
 		if (type == 2)
 		{
-			objects* tmp = new fixedobj(name, type, damage); //Hay7sal hena memory leak ? #question
+			//Hay7sal hena memory leak ? #question
+			objects* tmp = new fixedobj(name, type, damage);
 			wep.emplace_back(tmp);
 		}
 		if (type == 3)
 		{
-			objects* tmp = new treasure(name, type, damage); //Hay7sal hena memory leak ? #question
+			//Hay7sal hena memory leak ? #question
+			objects* tmp = new treasure(name, type, damage);
 			wep.emplace_back(tmp);
 		}
-        Game::rooms[ix][jx].setObj(wep[wep.size() - 1]);
+		Game::rooms[ix][jx].addObj(wep[wep.size() - 1]);
 	}
 	probData.close();
-	return;
 }
 
 

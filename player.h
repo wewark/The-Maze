@@ -1,31 +1,28 @@
 #ifndef PLAYER_H
 #define PLAYER_H
-#include <vector>    ///#refaie
+#include <vector>
 #include "Agent.h"
-#include "objects.h"  ///#refaie
+#include "objects.h"
 
 
-class objects;  ///#refaie
-
+class objects;
 
 class player : public Agent
 {
     public:
         player();
-        player(string nameX, Room* posX, int levelX, objects* wep=NULL);
+		player(string nameX, Room* posX, int levelX, int num, objects* wep=NULL);
         virtual ~player();
         int act(string key);
-        void status();
-        void attackAround();
-        vector<objects*> weapons;   ///#refaie
-        objects *cur_held;          ///#refaie
-        void printheld();           ///#refaie
-        bool switchweapons(int w);///#refaie
-        void printweapons();        ///#refaie
-        void addObj(objects* x);
-    protected:
-
-    private:
+		string status();
+		void attack();
+		vector<objects*> weapons;
+		objects *cur_held;
+		void printheld();
+		void switchweapons();
+		bool dropweapons();
+		void printweapons();
+		void addObj(objects* x);
 };
 
 #endif // PLAYER_H
