@@ -30,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	playerPix.resize(2);
 
 	// Load images
-	wallPix.load(":/files/imgs/wall.jpg");
+	wallPix.load(":/files/imgs/wall.png");
 	playerPix[0].load(":/files/imgs/player1.png");
 	playerPix[1].load(":/files/imgs/player2.png");
 	monsterPix.load(":/files/imgs/monster_1.png");
@@ -87,19 +87,19 @@ MainWindow::MainWindow(QWidget *parent) :
 					 Game::rooms[i][j].occupants[0]->getType() == "player1")
 			{
 				tile[i][j]->setPixmap(playerPix[0].scaledToHeight(tileHeight));
-				hpTile[i][j]->setText(QString::number(Game::me[0]->getHealth()));
+				hpTile[i][j]->setText(Game::me[0]->getHealth() > 0 ? QString::number(Game::me[0]->getHealth()) : "DEAD");
 			}
 			else if (Game::rooms[i][j].occupants.size() > 0 &&
 					 Game::rooms[i][j].occupants[0]->getType() == "player2")
 			{
 				tile[i][j]->setPixmap(playerPix[1].scaledToHeight(tileHeight));
-				hpTile[i][j]->setText(QString::number(Game::me[1]->getHealth()));
+				hpTile[i][j]->setText(Game::me[1]->getHealth() > 0 ? QString::number(Game::me[1]->getHealth()) : "DEAD");
 			}
 			else if (Game::rooms[i][j].occupants.size() > 0 &&
 					 Game::rooms[i][j].occupants[0]->getType() == "monster")
 			{
 				tile[i][j]->setPixmap(monsterPix.scaledToHeight(tileHeight));
-				hpTile[i][j]->setText(QString::number(Game::rooms[i][j].occupants[0]->getHealth()));
+				hpTile[i][j]->setText(Game::rooms[i][j].occupants[0]->getHealth() > 0 ? QString::number(Game::rooms[i][j].occupants[0]->getHealth()) : "DEAD");
 			}
 			else if (Game::rooms[i][j].cur_objs.size() > 0)
 			{
@@ -126,13 +126,15 @@ void MainWindow::keyPressEvent(QKeyEvent* e)
 	string key = e->text().toLocal8Bit().constData();
 
 	// If player 1 played
-	if (key == "w" || key == "a" || key == "s" || key == "d" ||
-		key == "e" || key == "q" || key == "f" || key == "r")
+	if (Game::me[0]->isAlive() &&
+		(key == "w" || key == "a" || key == "s" || key == "d" ||
+		key == "e" || key == "q" || key == "f" || key == "r"))
 		nextStep = Game::me[0]->act(key);
 
 	// If player 2 played
-	else if (key == "u" || key == "h" || key == "j" || key == "k" ||
-			 key == "i" || key == "y" || key == "l" || key == "o")
+	else if (Game::me[1]->isAlive() &&
+			 (key == "u" || key == "h" || key == "j" || key == "k" ||
+			 key == "i" || key == "y" || key == "l" || key == "o"))
 		nextStep = Game::me[1]->act(key);
 
 	// If a wrong key pressed
@@ -152,19 +154,19 @@ void MainWindow::keyPressEvent(QKeyEvent* e)
 					 Game::rooms[i][j].occupants[0]->getType() == "player1")
 			{
 				tile[i][j]->setPixmap(playerPix[0].scaledToHeight(tileHeight));
-				hpTile[i][j]->setText(QString::number(Game::me[0]->getHealth()));
+				hpTile[i][j]->setText(Game::me[0]->getHealth() > 0 ? QString::number(Game::me[0]->getHealth()) : "DEAD");
 			}
 			else if (Game::rooms[i][j].occupants.size() > 0 &&
 					 Game::rooms[i][j].occupants[0]->getType() == "player2")
 			{
 				tile[i][j]->setPixmap(playerPix[1].scaledToHeight(tileHeight));
-				hpTile[i][j]->setText(QString::number(Game::me[1]->getHealth()));
+				hpTile[i][j]->setText(Game::me[1]->getHealth() > 0 ? QString::number(Game::me[1]->getHealth()) : "DEAD");
 			}
 			else if (Game::rooms[i][j].occupants.size() > 0 &&
 					 Game::rooms[i][j].occupants[0]->getType() == "monster")
 			{
 				tile[i][j]->setPixmap(monsterPix.scaledToHeight(tileHeight));
-				hpTile[i][j]->setText(QString::number(Game::rooms[i][j].occupants[0]->getHealth()));
+				hpTile[i][j]->setText(Game::rooms[i][j].occupants[0]->getHealth() > 0 ? QString::number(Game::rooms[i][j].occupants[0]->getHealth()) : "DEAD");
 			}
 			else if (Game::rooms[i][j].cur_objs.size() > 0)
 			{

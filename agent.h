@@ -24,7 +24,7 @@ class Agent
         //-Getters-//
         string getName();
         string getType();
-        int getHealth();
+		int getHealth();
         Room* getPos();
         int getIndex();
 		int getLevel() { return level; }

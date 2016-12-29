@@ -11,7 +11,7 @@ fixedobj::fixedobj(string x,int c,int d):objects(x,c,d)
 bool fixedobj::act(player *p){
     for(int i=0;i<p->weapons.size();i++){
         if(p->weapons[i]->getName()=="Chest-Key"){
-            p->setHealth(p->getHealth()+getDamage());
+			p->setHealth(p->getHealth()+getDamage());
             return true;
         }
     }

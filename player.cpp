@@ -17,6 +17,7 @@ player::player():Agent("Untitled",NULL,1,0)
 player::player(string nameX, Room* posX, int levelX, int num, objects* wep) : Agent(nameX, posX, 1, levelX)
 {
 	health = 1000;
+	alive = true;
 	type += num == 1 ? "1" : "2";
 	if(wep != NULL)
 		cur_held = wep;
@@ -43,8 +44,9 @@ int player::act(string key)
 	// law mot yb2a enta keda 5sert, return 2 (2 = death)
 	if( health <= 0 )
 	{
+		alive = false;
 		warning = "YOU DIED!";
-		return 2;
+		return 3;
 	}
 
 	if(command == "quit")
@@ -143,12 +145,17 @@ int player::act(string key)
 	}
 }
 
+bool player::isAlive()
+{
+	return alive;
+}
+
 string player::status()
 {
 	string ret = "";
 	ret += "Name: " + name;
 	ret += "\tLevel: " + to_string(level);
-	ret += "\nHealth: " + to_string(health);
+	ret += "\nHealth: " + to_string(health <= 0 ? 0 : health);
 	ret += "\tDamage: " + to_string(cur_held->getDamage());
 	ret += "\nWeapon: " + cur_held->getName();
 	ret += "\n" + warning;
@@ -194,9 +201,8 @@ bool player::dropweapons(){
 
 void player::printweapons(){
 	cout<<"Weapons in your bag are: ("<<weapons.size()<<")"<<endl;
-	for(int i = 0; i < weapons.size(); i++){
+	for(int i = 0; i < weapons.size(); i++)
 		cout << "-> " << i+1 << " : " << weapons[i]->getName() << " - Damage: " << cur_held->getDamage()<<endl;
-	}
 }
 
 void player::addObj(objects* x)

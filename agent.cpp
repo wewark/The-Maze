@@ -32,7 +32,13 @@ Room* Agent::getPos() { return cur_pos; }
 
 //SETTERS
 void Agent::rename(string x) { name = x; }
-void Agent::setHealth(int x) { health = x; }
+void Agent::setHealth(int x)
+{
+	if (x <= 0 && health > 0)
+		cur_pos->leave(this);
+	health = x;
+}
+
 bool Agent::assignRoom(Room* x)
 {
 	if (!x) return false;

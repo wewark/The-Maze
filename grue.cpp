@@ -79,6 +79,7 @@ string grue::chase(Room* cur)
 		}
 		q.pop();
 	}
+	return "north";
 }
 
 string grue::status()

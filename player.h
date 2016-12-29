@@ -11,6 +11,7 @@ class player : public Agent
 {
 private:
 	string warning;
+	bool alive;
 
 public:
 	player();
@@ -26,6 +27,7 @@ public:
 	bool dropweapons();
 	void printweapons();
 	void addObj(objects* x);
+	bool isAlive();
 };
 
 #endif // PLAYER_H
