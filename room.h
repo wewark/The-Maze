@@ -11,7 +11,7 @@ class Room
 {
     public:
         Room();
-		Room(string nameX, string descX, bool typeX);
+		Room(string nameX, string descX, bool typeX, int i, int j);
         ~Room();
         static int ID;
 
@@ -43,6 +43,9 @@ class Room
         bool isWall();
         static void initializeRooms();
 		vector<Agent*> occupants;
+		int getPosi() const;
+		int getPosj() const;
+		bool containsPlayer();
 
     private:
         string name;
@@ -57,5 +60,6 @@ class Room
         bool wall;
 		int pos_i;
 		int pos_j;
+		int players;
 };
 #endif // ROOM_H

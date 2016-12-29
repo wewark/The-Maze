@@ -12,9 +12,11 @@ int Room::ID = 0;
 
 Room::Room() {}
 
-Room::Room(string nameX, string descX, bool typeX) {
+Room::Room(string nameX, string descX, bool typeX, int i, int j) {
 	name = nameX;
 	desc = descX;
+	pos_i = i;
+	pos_j = j;
 	north = NULL;
 	south = NULL;
 	east = NULL;
@@ -122,6 +124,10 @@ bool Room::enter(Agent* x)
 	if (roomSize < 5 && !wall) {
 		occupants.push_back(x);
 		roomSize++;
+		if (x->getType() == "player" ||
+			x->getType() == "player1" ||
+			x->getType() == "player2")
+			players++;
 		return true;
 	}
 	return false;
@@ -132,6 +138,10 @@ bool Room::leave(Agent* x) {
 		if (occupants[i]->getIndex() == x->getIndex()) {
 			occupants.erase(occupants.begin() + i);
 			roomSize--;
+			if (x->getType() == "player" ||
+				x->getType() == "player1" ||
+				x->getType() == "player2")
+				players--;
 			return true;
 		}
 }
@@ -163,7 +173,7 @@ vector<Room*> Room::getSurround() {
 	// The 4 neighbors
 	if (north) surr.push_back(north);
 	if (south) surr.push_back(south);
-	if (east) surr.push_back(west);
+	if (east) surr.push_back(east);
 	if (west) surr.push_back(west);
 	
 	// The corners
@@ -203,6 +213,21 @@ void Room::printSurroundAgent() {
 			cout << i+1 << " -> " << surr[i]->getName() << " : Health: " << surr[i]->getHealth() << endl;
 		else
 			cout << i+1 << " -> " << surr[i]->getName() << " : Health: " << "Dead." << endl;
+}
+
+
+int Room::getPosi() const
+{
+	return pos_i;
+}
+int Room::getPosj() const
+{
+	return pos_j;
+}
+
+bool Room::containsPlayer()
+{
+	return players > 0;
 }
 
 void Room::addObj(objects* x)
@@ -271,7 +296,7 @@ void Room::initializeRooms()
 		{
 			// Read room name
 			roomName >> name;
-			Game::rooms[i][j] = Room(name, desc, map[i][j] == '#');
+			Game::rooms[i][j] = Room(name, desc, map[i][j] == '#', i, j);
 		}
 
 	// LINKINK

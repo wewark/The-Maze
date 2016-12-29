@@ -23,8 +23,8 @@ int main(int argc, char *argv[]) {
 	Room::initializeRooms();
 
 	int numberOfPlayers = 1; // For now
-	Game::me.push_back(new player("khaled", &Game::rooms[1][5], 5, 1));
-	Game::me.push_back(new player("hamed", &Game::rooms[6][2], 5, 2));
+	Game::me.push_back(new player("khaled", &Game::rooms[15][15], 5, 1));
+	Game::me.push_back(new player("hamed", &Game::rooms[6][15], 5, 2));
 
 	// Load Mobs data into vector, and spawn them + assign names.
 	spawnLoadMobs(Game::mobs);

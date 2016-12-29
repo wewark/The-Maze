@@ -39,12 +39,13 @@ int player::act(string key)
 	else if (key == "q" || key == "y") command = "switch";
 	else if (key == "f" || key == "l") command = "drop";
 	else if (key == "r" || key == "o") command = "pick";
-	cout << command << endl;
-	cout << "health: " << health <<endl;
 
 	// law mot yb2a enta keda 5sert, return 2 (2 = death)
 	if( health <= 0 )
+	{
+		warning = "YOU DIED!";
 		return 2;
+	}
 
 	if(command == "quit")
 		return 0;
@@ -54,11 +55,8 @@ int player::act(string key)
 		if(weapons.size() > 0){
 			printheld();
 			printweapons();
-			cout << "----------------------------------------" << endl;
-			cout << "-Choose the preferred weapon: (1,2,3,..)" << endl;
 			dropweapons();
-			cout << "----------------------------------------" << endl;
-			cout << ">> Dropped!"<<endl;
+			warning = "You dropped a weapon";
 			return 1;
 		}
 	}
@@ -69,8 +67,7 @@ int player::act(string key)
 		{
 			printheld();
 			printweapons();
-			cout << "----------------------------------------" << endl;
-			cout << "-Choose the preferred weapon: (1,2,3,..)" << endl;
+			warning = "You switched weapons";
 			switchweapons();
 		}
 	}
@@ -79,52 +76,42 @@ int player::act(string key)
 	{
 		// If nothing is here to pick
 		if(cur_pos->cur_objs.size() == 0)
-		{
-			cout << "-------------------------------" << endl;
-			cout << ">> There is no objects to pick." << endl;
-		}
+			warning = "There is no objects to pick";
 
 		// Something is here
 		else
 		{
 			// If bag is full
 			if(weapons.size() >= 5)
-			{
-				cout << "----------------------------------------"    << endl;
-				cout << ">> You don't have enough space in your bag!" << endl;
-			}
+				warning = "You don't have enough space in your bag!";
 
 			// Bag is not full
 			else
 			{
 				cur_pos->print_cur_objs();
-				cout << "What do you want to pick ? (1,2,3,...)"<<endl;
-				int i = 0;
-				if(cur_pos->cur_objs[i]->act(this)) // Law 3reft t3mlo pick...
+				if(cur_pos->cur_objs[0]->act(this)) // Law 3reft t3mlo pick...
 				{
-					if(cur_pos->cur_objs[i]->getType() == 1){ //law prob
-						cout << "----------------------------------------" << endl;
-						cout << ">> You picked up " << cur_pos->cur_objs[i]->getName() << endl;
-						cur_pos->cur_objs.erase(cur_pos->cur_objs.begin()+i);//emsa7o mn vector el room;
+					if(cur_pos->cur_objs[0]->getType() == 1){ //law prob
+						warning = "You picked up " + cur_pos->cur_objs[0]->getName();
+
+						// Delete item from the room
+						cur_pos->cur_objs.erase(cur_pos->cur_objs.begin());
 						return 1;
 					}
-					else if(cur_pos->cur_objs[i]->getType() == 2){ //law fixed
-						cout << "----------------------------------------" << endl;
-						cout << ">> You opened " << cur_pos->cur_objs[i]->getName() << " And gained +" << cur_pos->cur_objs[i]->getDamage() << "HP!." << endl;
-						cur_pos->cur_objs[i]->setDamage(0);
+					else if(cur_pos->cur_objs[0]->getType() == 2){ //law fixed
+						warning = "You opened " + cur_pos->cur_objs[0]->getName() + " and gained +" + to_string(cur_pos->cur_objs[0]->getDamage()) + " HP!";
 						return 1;
 					}
-					else if(cur_pos->cur_objs[i]->getType() == 3){ //law treasure
-						cout << "----------------------------------------" << endl;
-						cout << ">> You picked up the treasure !!" << endl;
+					else if(cur_pos->cur_objs[0]->getType() == 3){ //law treasure
+						warning = "You picked up the treasure !!";
+
+						// Delete item from the room
+						cur_pos->cur_objs.erase(cur_pos->cur_objs.begin());
 						return 2;
 					}
 				}
 				else // law ma3rftsh te3mlo pick
-				{
-					cout << "----------------------------------------" << endl;
-					cout << ">> You don't have a Key to Open this object." << endl;
-				}
+					warning = "You don't have a Key to Open this object.";
 			}
 		}
 	}
@@ -133,18 +120,13 @@ int player::act(string key)
 	else if(command == "attack")
 	{
 		attack();
-		cout << "----------------------------------------" << endl;
-		cout << ">> You attacked all the monsters around you!" << endl;
-		//system("PAUSE");
-		//system("CLS");
+		warning = "You attacked everyone around you!";
 		return 1;
 	}
 
-	// LAW YNF3 TT7ARK FE EL ROOM DEH E3ML KAZA...
+	// If you can go to that direction
 	else if(move(command))
 	{
-		cout << "----------------------------------------" << endl;
-		cout << ">> You moved " << command << "." << endl;
 		cur_pos->clearFog(); //Clear the fog of WAR.
 		return 1;
 	}
@@ -152,14 +134,11 @@ int player::act(string key)
 	else if(cur_pos->getLinked(command) == NULL ||
 			!cur_pos->getLinked(command)->isWall()) //LAW MA3rfsh yt7rak, check ma3rfsh leh.
 	{
-
-		cout << "----------------------------------------" << endl;
-		cout << ">> There is a wall at the " << command << ", You can't move there.<<" << endl;
+		//cout << ">> There is a wall at the " << command << ", You can't move there.<<" << endl;
 	}
 
 	else
 	{
-		cout << "----------------------------------------" << endl;
 		cout <<"The room is full, you can't enter this room at the moment."<<endl;
 	}
 }
@@ -172,16 +151,8 @@ string player::status()
 	ret += "\nHealth: " + to_string(health);
 	ret += "\tDamage: " + to_string(cur_held->getDamage());
 	ret += "\nWeapon: " + cur_held->getName();
+	ret += "\n" + warning;
 	return ret;
-	/*if(cur_pos != NULL){
-		cur_pos->printCurrent();
-		cur_pos->printOccupants();
-		cout << "---------------Surroundings-------------" << endl;
-		cur_pos->printSurroundAgent(); //Print Player surrounding monsters
-		cur_pos->print_cur_objs();
-		cur_pos->printLinked();
-	}
-	else cout << "You're not currently at any Room" << endl;*/
 }
 
 void player::attack()

@@ -52,6 +52,5 @@ FORMS    += mainwindow.ui
 
 RESOURCES += resources.qrc
 
-CONFIG += console
 CONFIG += c++11
 *gcc*:QMAKE_CXXFLAGS += -std=c++11

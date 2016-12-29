@@ -33,7 +33,6 @@ private:
 	QPixmap nothingPix;
 	vector<vector<QLabel*>> tile;
 	vector<vector<QLabel*>> hpTile;
-	vector<vector<QLabel*>> hitTile;
 	vector<QLabel*> statusLabel;
 	static map<string, QPixmap> itemsPix;
 	const int tileHeight = 40;

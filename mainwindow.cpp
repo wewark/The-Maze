@@ -51,16 +51,12 @@ MainWindow::MainWindow(QWidget *parent) :
 	statusLabel.resize(2);
 	statusLabel[0] = new QLabel(this);
 	statusLabel[1] = new QLabel(this);
-	statusLabel[0]->setGeometry(70, 10, 200, 50);
-	statusLabel[1]->setGeometry(Game::mapWidth * tileHeight / 2 + 60, 10, 200, 50);
-	statusLabel[0]->setStyleSheet("color: white; font-family: Arial;font-style: normal;font-size: 9pt;font-weight: bold;");
-	statusLabel[1]->setStyleSheet("color: white; font-family: Arial;font-style: normal;font-size: 9pt;font-weight: bold;");
+	statusLabel[0]->setGeometry(70, 10, 400, 55);
+	statusLabel[1]->setGeometry(Game::mapWidth * tileHeight / 2 + 60, 10, 400, 55);
+	statusLabel[0]->setStyleSheet("color: white; font-family: Arial;font-style: normal;font-size: 8pt;font-weight: bold;");
+	statusLabel[1]->setStyleSheet("color: white; font-family: Arial;font-style: normal;font-size: 8pt;font-weight: bold;");
 	statusLabel[0]->setText(QString::fromStdString(Game::me[0]->status()));
 	statusLabel[1]->setText(QString::fromStdString(Game::me[1]->status()));
-
-	hitPix.resize(8);
-	for	(int i = 1; i <= 8; i++)
-		hitPix[i - 1].load(":/files/imgs/hit_" + QString::number(i) + ".png");
 
 	itemsPix["Pandora's-Chest"].load(":/files/imgs/chest2.png");
 	itemsPix["Neko'sTreasure"].load(":/files/imgs/chest.png");
@@ -75,32 +71,46 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	tile.assign(Game::mapHeight, vector<QLabel*>(Game::mapWidth));
 	hpTile.assign(Game::mapHeight, vector<QLabel*>(Game::mapWidth));
-	hitTile.assign(Game::mapHeight, vector<QLabel*>(Game::mapWidth));
 
 	for (int i = 0; i < Game::mapHeight; i++)
 		for (int j = 0; j < Game::mapWidth; j++)
 		{
 			tile[i][j] = new QLabel(this);
-			tile[i][j]->setGeometry(j * tileHeight, infoHeight + i * tileHeight, tileHeight, tileHeight);
 			hpTile[i][j] = new QLabel(this);
+			tile[i][j]->setGeometry(j * tileHeight, infoHeight + i * tileHeight, tileHeight, tileHeight);
 			hpTile[i][j]->setGeometry(j * tileHeight, infoHeight + i * tileHeight, tileHeight, tileHeight);
-			hitTile[i][j] = new QLabel(this);
-			hitTile[i][j]->setGeometry(j * tileHeight, infoHeight + i * tileHeight, tileHeight, tileHeight);
 			hpTile[i][j]->setAlignment(Qt::AlignCenter);
-			hpTile[i][j]->setStyleSheet("color: white; font-size: 13pt;");
+			hpTile[i][j]->setStyleSheet("color: white; font-size: 12pt; font-weight: bold;");
 			if (Game::rooms[i][j].isWall())
 				tile[i][j]->setPixmap(wallPix.scaledToHeight(tileHeight));
 			else if (Game::rooms[i][j].occupants.size() > 0 &&
 					 Game::rooms[i][j].occupants[0]->getType() == "player1")
+			{
 				tile[i][j]->setPixmap(playerPix[0].scaledToHeight(tileHeight));
+				hpTile[i][j]->setText(QString::number(Game::me[0]->getHealth()));
+			}
 			else if (Game::rooms[i][j].occupants.size() > 0 &&
 					 Game::rooms[i][j].occupants[0]->getType() == "player2")
+			{
 				tile[i][j]->setPixmap(playerPix[1].scaledToHeight(tileHeight));
+				hpTile[i][j]->setText(QString::number(Game::me[1]->getHealth()));
+			}
 			else if (Game::rooms[i][j].occupants.size() > 0 &&
 					 Game::rooms[i][j].occupants[0]->getType() == "monster")
+			{
 				tile[i][j]->setPixmap(monsterPix.scaledToHeight(tileHeight));
+				hpTile[i][j]->setText(QString::number(Game::rooms[i][j].occupants[0]->getHealth()));
+			}
 			else if (Game::rooms[i][j].cur_objs.size() > 0)
+			{
 				tile[i][j]->setPixmap(itemsPix[Game::rooms[i][j].cur_objs[0]->getName()]);
+				hpTile[i][j]->setText("");
+			}
+			else
+			{
+				tile[i][j]->setPixmap(nothingPix.scaledToHeight(tileHeight));
+				hpTile[i][j]->setText("");
+			}
 		}
 }
 
@@ -166,37 +176,4 @@ void MainWindow::keyPressEvent(QKeyEvent* e)
 				tile[i][j]->setPixmap(nothingPix.scaledToHeight(tileHeight));
 				hpTile[i][j]->setText("");
 			}
-
-	/*
-	// Get original location
-	int
-		x = ui->label->x(),
-		y = ui->label->y(),
-		height = ui->label->height(),
-		width = ui->label->width();
-	int step = 50;
-
-	// Change position
-	if (e->text() == "d")
-		x += step;
-	else if (e->text() == "a")
-		x -= step;
-	else if (e->text() == "w")
-		y -= step;
-	else if (e->text() == "s")
-		y += step;
-
-	// Update position
-	ui->label->setGeometry(x, y, height, width);
-	*/
-};
-
-/* IGNORE this
- * ***********
- ui->pushButton->setVisible(false);
- void MainWindow::on_pushButton_clicked()
- {
-	 ui->label->setText("ok");
-	 this->setStyleSheet("background-color: red;");
- }
-*/
+}
