@@ -15,6 +15,7 @@ Room::Room() {}
 Room::Room(string nameX, string descX, bool typeX, int i, int j) {
 	name = nameX;
 	desc = descX;
+	players = 0;
 	pos_i = i;
 	pos_j = j;
 	north = NULL;
