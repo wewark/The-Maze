@@ -21,8 +21,8 @@ drop item|F|L
 switch item|Q|Y
 
 ## Technical
-- Monsters chase players using [Breadth-first search](https://en.wikipedia.org/wiki/Breadth-first_search)
 - The game is developed with C++
+- Monsters chase players using [Breadth-first search](https://en.wikipedia.org/wiki/Breadth-first_search)
 - [Qt](https://www.qt.io/) library is used for GUI
 
 ## Developers
