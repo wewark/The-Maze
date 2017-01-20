@@ -168,7 +168,6 @@ void player::attack()
 	vector<Agent*> surr = cur_pos->getSurroundAgent();
 	for(int i = 0; i < surr.size(); i++)
 		surr[i]->setHealth(surr[i]->getHealth() - (cur_held->getDamage()));
-	//TODO: Damage should be according to current weapon
 }
 
 void player::printheld(){
